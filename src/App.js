@@ -14,7 +14,7 @@ import 'primeicons/primeicons.css';
 import Modales from '../src/Modal';
 import ModalQuestion from '../src/ModalQuestion'
 import { showMessage } from "./Component/SwalComponent";
-import { deletePersona, getPersona } from "./Micro/Micros";
+import { deletePersona, getPersona, putPersona } from "./Micro/Micros";
 function App() {
   useEffect(() => {
     ConsultarUsuarios();
@@ -45,7 +45,7 @@ function App() {
     try {
       deletePersona(selectedItem.id)  
       .then((res1) => {
-          if (res1.response.code != 0) {
+          if (!res1.response.success) {
               showMessage(
                   "¡Atención!",
                   res1.response.menssage,
@@ -184,10 +184,7 @@ function App() {
   const saveForm = (data) => {
 
     if (data?.id != null && data?.id != "" && data?.id != 0) {
-      const obj = {};
-
       
-
       const { nombres, apellidoPaterno, apellidoMaterno, email, sexoCodigo, fechaNacimiento, regionCodigo, ciudadCodigo, comunaCodigo, direccion, telefono, observaciones } = data;
 
       const newData = {
@@ -206,18 +203,11 @@ function App() {
       };
 
       try {
-        fetch('https://localhost:7048/api/Persona/' + data.id, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newData)
-        }).then((res) => res.json())
+        putPersona(selectedItem.id,newData)        
           .then((res1) => {
 
             console.log(res1)
-            if (res1.response.code != 0) {
+            if (!res1.response.success) {
               showMessage(
                 "¡Atención!",
                 res1.response.menssage,
@@ -232,6 +222,7 @@ function App() {
               );
               setShow(false)
               ConsultarUsuarios();
+              setSelectedItem(undefined);
             }
           });
       } catch (error) {
@@ -255,7 +246,7 @@ function App() {
           .then((res1) => {
 
             console.log(res1)
-            if (res1.response.code != 0) {
+            if (!res1.response.success) {
               showMessage(
                 "¡Atención!",
                 res1.response.menssage,
@@ -270,6 +261,8 @@ function App() {
               );
               setShow(false)
               ConsultarUsuarios();
+              debugger
+              setSelectedItem(undefined);
             }
 
 
@@ -333,7 +326,7 @@ function App() {
           </Col>
         </Row>
       </Container>
-      <Modales editMode={editMode} show={show} setShow={setShow} selectedItem={selectedItem} onClic={onClic} />
+      <Modales editMode={editMode} show={show} setShow={setShow} setSelectedItem ={setSelectedItem} selectedItem={selectedItem} onClic={onClic} />
       <ModalQuestion show={showDelete} setShow={setShowDelete} onClicDelete={onClicDelete} selectedItem={selectedItem} />
     </>
 

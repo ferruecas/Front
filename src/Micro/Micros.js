@@ -68,12 +68,28 @@ const deletePersona = async (id) => {
     const object = await response.json();
     return object;
 };
+
+const putPersona = async (id,data) => {
+    debugger
+    const response = await fetch(`https://localhost:7048/api/Persona/`+id, {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+   
+    const object = await response.json();
+    return object;
+};
 export {
     getPersona,
     getSex,
     getRegion,
     getCiudad,
     getComuna,
-    deletePersona
+    deletePersona,
+    putPersona
 
 };

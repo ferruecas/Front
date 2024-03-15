@@ -3,7 +3,7 @@ import { Button, Modal, Form, Col, Row, Container } from 'react-bootstrap';
 import { getCiudad, getComuna, getRegion, getSex } from './Micro/Micros';
 import moment from "moment";
 
-function Modales({ editMode,show, setShow, selectedItem, onClic, }) {
+function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic, }) {
 
   const [listSex, setListSex] = useState([]);
   const [listRegion, setListRegion] = useState([]);
@@ -68,19 +68,18 @@ function Modales({ editMode,show, setShow, selectedItem, onClic, }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    debugger
-    setFormData({
+        setFormData({
+      ...formData,
+      [name]: value
+    });
+    setSelectedItem({
       ...formData,
       [name]: value
     });
     
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(formData);
-    console.log(formData)
-  };
+
 
   useEffect(() => {
     
@@ -89,6 +88,7 @@ function Modales({ editMode,show, setShow, selectedItem, onClic, }) {
       setFormData({...selectedItem,
         fechaNacimiento:moment(selectedItem.fechaNacimiento).format('YYYY-MM-DD')})
     } else {
+      debugger
       setFormData(init)
     }
 
@@ -104,7 +104,7 @@ function Modales({ editMode,show, setShow, selectedItem, onClic, }) {
       <Container>
         <Row className="justify-content-center mt-5">
           <Col md={8}>
-            <Form onSubmit={handleSubmit}>
+            <Form>
               <Form.Group controlId="run">
                 <Form.Label>RUN</Form.Label>
                 <Form.Control disabled={editMode} maxLength="10" type="text" name="run" placeholder="Run" value={formData?.run} onChange={handleChange} />
