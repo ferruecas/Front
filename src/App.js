@@ -14,7 +14,7 @@ import 'primeicons/primeicons.css';
 import Modales from '../src/Modal';
 import ModalQuestion from '../src/ModalQuestion'
 import { showMessage } from "./Component/SwalComponent";
-import { deletePersona, getPersona, putPersona } from "./Micro/Micros";
+import { deletePersona, getPersona, postPersona, putPersona } from "./Micro/Micros";
 function App() {
   useEffect(() => {
     ConsultarUsuarios();
@@ -33,43 +33,44 @@ function App() {
   const ConsultarUsuarios = async () => {
     try {
       getPersona()
-      .then((res1) => {
-        
-        setUserList(res1);
-      });  
+        .then((res1) => {
+
+          setUserList(res1);
+        });
     } catch (error) {
       alert("Error Obteniendo data:" + error);
     }
   };
   const onClicDelete = async () => {
     try {
-      deletePersona(selectedItem.id)  
-      .then((res1) => {
-          if (!res1.response.success) {
-              showMessage(
-                  "¡Atención!",
-                  res1.response.menssage,
-                  "warning"
-              );
+      deletePersona(selectedItem.id)
+        .then((res1) => {
+          if (res1.response.success) {
+            showMessage(
+              "Eliminación Exitosa",
+              "",
+              "success"
+            );
+            setShowDelete(false)
+            ConsultarUsuarios();
+            
           }
           else {
-              showMessage(
-                  "Eliminación Exitosa",
-                  "",
-                  "success"
-              );
-              setShowDelete(false)
-              ConsultarUsuarios();
+            showMessage(
+              "¡Atención!",
+              res1.response.menssage,
+              "warning"
+            );
           }
-      });
-  } catch (error) {
+        });
+    } catch (error) {
       showMessage(
-          "¡Atención!",
-          error,
-          "warning"
+        "¡Atención!",
+        error,
+        "warning"
       );
-  }
-  
+    }
+
   };
 
   function validarRUNT(rut) {
@@ -102,12 +103,12 @@ function App() {
 
   const ValidarFormulario = (data) => {
     let menssage = undefined;
-    
-    if (data?.id == null || data?.id == "" || data?.id == 0 || data?.id == undefined) {
+
+    if (data?.id === null || data?.id === "" || data?.id === 0 || data?.id ===undefined) {
       if (data?.run === "" && !menssage) {
         menssage = "El runt es obligatorio.";
       }
-      
+
       if (!validarRUNT(data?.run)) {
 
         menssage = "El runt no es valido.";
@@ -177,14 +178,13 @@ function App() {
       });
     } else {
       saveForm(data);
-    } 
-
+    }
   };
 
   const saveForm = (data) => {
 
     if (data?.id != null && data?.id != "" && data?.id != 0) {
-      
+
       const { nombres, apellidoPaterno, apellidoMaterno, email, sexoCodigo, fechaNacimiento, regionCodigo, ciudadCodigo, comunaCodigo, direccion, telefono, observaciones } = data;
 
       const newData = {
@@ -203,18 +203,9 @@ function App() {
       };
 
       try {
-        putPersona(selectedItem.id,newData)        
+        putPersona(selectedItem.id, newData)
           .then((res1) => {
-
-            console.log(res1)
-            if (!res1.response.success) {
-              showMessage(
-                "¡Atención!",
-                res1.response.menssage,
-                "warning"
-              );
-            }
-            else {
+            if (res1.response.success) {
               showMessage(
                 "Modificacion Exitosas",
                 "",
@@ -223,6 +214,14 @@ function App() {
               setShow(false)
               ConsultarUsuarios();
               setSelectedItem(undefined);
+              
+            }
+            else {
+              showMessage(
+                "¡Atención!",
+                res1.response.menssage,
+                "warning"
+              );
             }
           });
       } catch (error) {
@@ -235,38 +234,26 @@ function App() {
     }
     else {
       try {
-        fetch("https://localhost:7048/api/Persona", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data)
-        }).then((res) => res.json())
+        postPersona(data)
           .then((res1) => {
-
-            console.log(res1)
-            if (!res1.response.success) {
-              showMessage(
-                "¡Atención!",
-                res1.response.menssage,
-                "warning"
-              );
-            }
-            else {
+        
+            if (res1.response.success) {
               showMessage(
                 "Creaccion Exitosas",
                 "",
                 "success"
               );
               setShow(false)
-              ConsultarUsuarios();
-              debugger
+              ConsultarUsuarios();              
               setSelectedItem(undefined);
             }
-
-
-
+            else {
+              showMessage(
+                "¡Atención!",
+                res1.response.menssage,
+                "warning"
+              );              
+            }
           });
       } catch (error) {
         showMessage(
@@ -280,7 +267,8 @@ function App() {
 
 
   return (
-    <>
+    <React.Fragment>
+
       <Toast ref={toast} />
       <Container fluid>
         <Row className="justify-content-center">
@@ -289,8 +277,23 @@ function App() {
         <Row className="justify-content-center">
 
 
+
           <Col md={8}>
+            <div className="d-flex justify-content-center align-items-center">
+
+              <h1>Lista de personas</h1>
+            </div>
+
+            <header>
+
+              <Button onClick={() => { setEditMode(false); setSelectedItem(undefined); setShow(true); }} variant="success" className="mb-3">
+                <FontAwesomeIcon icon={faPlus} />Nuevo
+              </Button>
+
+            </header>
             <Table striped bordered hover size="sm">
+
+
               <thead>
                 <tr>
                   <th>#</th>
@@ -302,15 +305,15 @@ function App() {
               <tbody>
                 {userList.map((data, index) => (
                   <tr key={index}>
-                    <td>{index}</td>
-                    <td>{data.nombres}</td>
-                    <td>{data.run}</td>
+                    <td class="align-middle">{index}</td>
+                    <td class="align-middle">{data.nombres}</td>
+                    <td class="align-middle">{data.run}</td>
                     <td>
-                      <Button onClick={() => { setEditMode(true); setSelectedItem(data); setShow(true); }} variant="warning">
+                      <Button className="m-1" onClick={() => { setEditMode(true); setSelectedItem(data); setShow(true); }} variant="warning">
                         <FontAwesomeIcon icon={faPencilSquare} /> Editar
                       </Button>
 
-                      <Button onClick={() => { setEditMode(false); setSelectedItem(data); setShowDelete(true); }} variant="danger">
+                      <Button className="m-1" onClick={() => { setEditMode(false); setSelectedItem(data); setShowDelete(true); }} variant="danger">
                         <FontAwesomeIcon icon={faTrash} /> Eliminar
                       </Button>
                     </td>
@@ -319,16 +322,12 @@ function App() {
               </tbody>
             </Table>
           </Col>
-          <Col md={2}>
-            <Button onClick={() => { setEditMode(false);setSelectedItem(undefined); setShow(true); }} variant="success" className="mb-3">
-              <FontAwesomeIcon icon={faPlus} />Nuevo
-            </Button>
-          </Col>
+
         </Row>
       </Container>
-      <Modales editMode={editMode} show={show} setShow={setShow} setSelectedItem ={setSelectedItem} selectedItem={selectedItem} onClic={onClic} />
+      <Modales editMode={editMode} show={show} setShow={setShow} setSelectedItem={setSelectedItem} selectedItem={selectedItem} onClic={onClic} />
       <ModalQuestion show={showDelete} setShow={setShowDelete} onClicDelete={onClicDelete} selectedItem={selectedItem} />
-    </>
+    </React.Fragment>
 
   );
 }

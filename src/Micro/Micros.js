@@ -56,7 +56,7 @@ const getPersona = async () => {
 };
 
 const deletePersona = async (id) => {
-    debugger
+    
     const response = await fetch(`https://localhost:7048/api/Persona/`+id, {
         method: "DELETE",
         headers: {
@@ -70,7 +70,7 @@ const deletePersona = async (id) => {
 };
 
 const putPersona = async (id,data) => {
-    debugger
+    
     const response = await fetch(`https://localhost:7048/api/Persona/`+id, {
         method: "PUT",
         headers: {
@@ -83,7 +83,23 @@ const putPersona = async (id,data) => {
     const object = await response.json();
     return object;
 };
+
+const postPersona = async (data) => {
+    debugger
+    const response = await fetch(`https://localhost:7048/api/Persona`, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+   
+    const object = await response.json();
+    return object;
+};
 export {
+    postPersona,
     getPersona,
     getSex,
     getRegion,

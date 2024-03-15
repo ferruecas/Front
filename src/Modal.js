@@ -88,7 +88,7 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
       setFormData({...selectedItem,
         fechaNacimiento:moment(selectedItem.fechaNacimiento).format('YYYY-MM-DD')})
     } else {
-      debugger
+      
       setFormData(init)
     }
 
@@ -106,11 +106,11 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
           <Col md={8}>
             <Form>
               <Form.Group controlId="run">
-                <Form.Label>RUN</Form.Label>
+                <Form.Label >RUN</Form.Label>
                 <Form.Control disabled={editMode} maxLength="10" type="text" name="run" placeholder="Run" value={formData?.run} onChange={handleChange} />
               </Form.Group>
               <Row>
-                <Col md={4}>
+                <Col md={12}>
                   <Form.Group controlId="nombres">
                     <Form.Label>Nombres</Form.Label>
                     <Form.Control maxLength="30" type="text" name="nombres" placeholder="Nombres" value={formData?.nombres} onChange={handleChange}
@@ -122,7 +122,7 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
                     />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
+                <Col md={12}>
                   <Form.Group controlId="apellidoPaterno">
                     <Form.Label>Apellido Paterno</Form.Label>
                     <Form.Control
@@ -134,7 +134,7 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
                       type="text" maxLength="20" name="apellidoPaterno" placeholder="Primer apellido" value={formData?.apellidoPaterno} onChange={handleChange} />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
+                <Col md={12}>
                   <Form.Group controlId="apellidoMaterno">
                     <Form.Label>Apellido Materno</Form.Label>
                     <Form.Control maxLength="20" type="text" name="apellidoMaterno" placeholder="Segundo apellido" value={formData?.apellidoMaterno} onChange={handleChange}
@@ -182,7 +182,7 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
                 <Form.Label>Ciudad</Form.Label>
                 <Form.Control as="select" name="ciudadCodigo" value={formData?.ciudadCodigo} onChange={handleChange}>
                   <option value="0">Seleccione</option>
-                  {listCiudad?.filter(item => item.regionCodigo == formData?.regionCodigo).map((x) => (
+                  {listCiudad?.filter(item => parseInt(item.regionCodigo) === parseInt(formData?.regionCodigo)).map((x) => (
                     <option value={x.codigo}>
                       {x.nombre}
                     </option>
@@ -193,7 +193,7 @@ function Modales({ editMode,show, setShow, setSelectedItem,selectedItem, onClic,
                 <Form.Label>Comuna</Form.Label>
                 <Form.Control as="select" name="comunaCodigo" value={formData?.comunaCodigo} onChange={handleChange}>
                   <option value="0">Seleccione</option>
-                  {listComuna?.filter(item => item.ciudadCodigo == formData?.ciudadCodigo && item.regionCodigo == formData?.regionCodigo).map((x) => (
+                  {listComuna?.filter(item => parseInt(item.ciudadCodigo) === parseInt(formData?.ciudadCodigo) && parseInt(item.regionCodigo) === parseInt(formData?.regionCodigo)).map((x) => (
                     <option value={x.codigo}>
                       {x.nombre}
                     </option>
