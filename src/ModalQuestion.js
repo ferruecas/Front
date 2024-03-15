@@ -6,13 +6,6 @@ function ModalQuestion({show, setShow, selectedItem,onClicDelete}) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
-  useEffect(() => {
-
-  }, [selectedItem]);
-
-
-
   return (
  
       <Modal show={show} onHide={handleClose}>

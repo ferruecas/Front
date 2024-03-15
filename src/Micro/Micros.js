@@ -43,11 +43,37 @@ const getComuna = async () => {
     const object = await response.json();
     return object;
 };
-export {
+const getPersona = async () => {
+    const response = await fetch(`https://localhost:7048/api/Persona`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    })
+    const object = await response.json();
+    return object;
+};
 
+const deletePersona = async (id) => {
+    debugger
+    const response = await fetch(`https://localhost:7048/api/Persona/`+id, {
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    })
+   
+    const object = await response.json();
+    return object;
+};
+export {
+    getPersona,
     getSex,
     getRegion,
     getCiudad,
-    getComuna
-    
+    getComuna,
+    deletePersona
+
 };
